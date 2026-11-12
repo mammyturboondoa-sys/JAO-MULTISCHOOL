@@ -1,0 +1,25 @@
+# Render "blueprint" (NOT yet deployed). Creating this on Render costs money: a paid web service + a persistent disk.
+# Do not create it until the owner has approved the costs in docs/DEPLOYMENT.md.
+services:
+  - type: web
+    name: jao
+    runtime: docker
+    plan: starter            # paid instance; needed for a persistent disk
+    healthCheckPath: /healthz
+    disk:
+      name: jao-data
+      mountPath: /data       # the database, uploads and backups live here
+      sizeGB: 5
+    envVars:
+      - key: JAO_OWNER_EMAIL
+        sync: false          # you type it in Render's dashboard; never in this file
+      - key: JAO_OWNER_PASSWORD
+        sync: false
+      - key: JAO_ADMIN_EMAIL
+        sync: false
+      - key: JAO_ADMIN_PASSWORD
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_MODEL
+        sync: false
