@@ -19,7 +19,7 @@ no extra packages.
 Optional: `npm run demo-data` adds a few clearly fictional "Demo …" records so you can try the
 screens. Do not run it on a real school's data.
 
-Run the automated tests with `npm test` (93 tests, SQLite only).
+Run the automated tests with `npm test` (103 tests, SQLite only).
 
 Optional settings: copy `.env.example` to `.env` and edit it (port, DOUDOUS² AI key, etc.).
 
@@ -47,7 +47,19 @@ Optional settings: copy `.env.example` to `.env` and edit it (port, DOUDOUS² AI
   school administrator, who opens it and chooses their own new password. The super administrator never sees or
   chooses the password. Using the link signs the administrator out everywhere, and a newer link cancels older ones.
   (There is no e-mail sending, so the link must be passed on by hand, for example by phone or WhatsApp.)
+- **Super administrator password:** choose your own permanent password at first sign-in and change it any time under *Account & security*; it is stored only as a hash in the database (so it survives restarts, updates and backups). Forgot it? Use a one-time recovery code on the sign-in page, or run `npm run reset-owner` on the server. Full details: `docs/SUPER_ADMIN.md`.
 - Known limit: an e-mail address can belong to only one account on the whole platform.
+
+## 1c. Prefects (new)
+
+- Menu **Prefects**. The school administrator appoints prefects for an academic year; teachers and parents can see the list (name, class and post only).
+- **Only students of Form 5, Lower Sixth and Upper Sixth** can be appointed (Terminale / Première also count). The server checks this, not only the screen.
+- Every school gets a starting list of 19 posts (Head Prefect, Senior Prefect, Discipline Prefect, Sports Prefect...). Under **Prefects > Posts** a school can rename, add or switch off posts.
+- The prefect post also appears on the **student's profile** (Profile tab, row "Prefect"), so the student's parent sees it for their own child.
+- A post can be ended by the administrator. If a prefect of the current year graduates, transfers or leaves Form 5 - Upper Sixth, the post ends by itself. Records are kept, never deleted.
+- Upgrading: replace the files, keep `data/`. One new migration (0021) adds two new tables and changes nothing existing; a safety copy is saved first.
+
+- **Look and feel:** `public/css/polish.css` adds smooth motion and colour (cards rise in and lift on hover, shining buttons, colour glow in the background, animated gold-and-blue frame on prefect cards). It is pure CSS and stops for people who ask their device for reduced motion. To switch it off, remove its `<link>` line from `public/index.html`.
 
 ## 2. What is where
 
@@ -122,7 +134,7 @@ super administrator (approves new schools; cannot see any student, guardian or g
 
 ## 8. Test status
 
-- `npm test`: 93 passing (login, CSRF, rate limit, school isolation, database upgrades, one email in several schools, roles, privacy, grade maths,
+- `npm test`: 168 passing (login, CSRF, rate limit, school isolation, database upgrades, one email in several schools, roles, privacy, grade maths,
   approval flow, shop, stock, DOUDOUS², and the whole Discipline module). All tests use SQLite only.
 - Browser checks run on desktop, tablet (768px) and phone (390px): no sideways scrolling and no
   JavaScript errors on the administrator pages; parent flow checked on a phone.
@@ -162,3 +174,88 @@ Found under **Discipline** in the menu (administrator and authorised teachers). 
 **Updating an existing JAO:** (1) stop JAO; (2) copy your `data` folder somewhere safe (JAO also makes its own backup before upgrading); (3) unzip the new version over the old `jao` folder but **keep your `data` folder**; (4) start JAO again. The database upgrades itself (migrations 0004 to 0008 are additive: they only add tables and columns, nothing is deleted). If an upgrade fails, JAO rolls it back and tells you; put the `data` copy back and ask for help.
 
 **Not done yet (honest list):** automatic WhatsApp/email/SMS sending (needs a paid provider, only prepared messages exist), PNG logos on the PDF letter, term dates, and everything on the hosting side: JAO is still **not ready for real schools online** until hosting, HTTPS, off-site backups and a security review are done and tested.
+
+## Scholarships module (in progress — phases 1 and 2)
+
+Menu entry **Scholarships**. Phase 1 gives each school its own scholarship opportunities: the administrator creates them (categories Academic Merit, Talent and Excellence, Social Support, External Scholarships), sets benefits, places, minimum average, eligible classes, open and closing dates, then publishes, suspends or closes them. Drafts are visible only to the administrator; staff, parents and students see published ones; a closed scholarship cannot be edited. The administrator also names which teachers may act as **reviewers** (they will only see applications assigned to them, from phase 2). Applications, eligibility checks, decisions, the external Scholarship Finder and DOUDOUS² answers come in the next phases.
+
+**Applications (phase 2):** students apply for themselves and parents for a linked child. The server checks eligibility from the school's own data: scholarship open, student active, class eligible, and the minimum average taken **only from approved report cards** (if nothing is approved yet, the condition is reported as not confirmed, never guessed). Applicants write a motivation statement, attach PDF or image documents (private, 3 MB each, 8 at most), then submit; after submitting the application is locked. The administrator assigns reviewers (teachers named on the Scholarships page); a reviewer sees only the applications assigned to them and gives a private recommendation; only the administrator decides (approved, waiting list, or not selected, with a reason that the family sees). Approvals cannot exceed the number of places. Students and parents receive in-app notices. Reviewer notes are never shown to families.
+
+**Welcome screen:** the first screen now uses the supplied JAO picture, with real clickable Login and FR/EN buttons placed over it, and a spoken "Welcome to JAO / Bienvenue à JAO".
+
+## Super Administrator tools (platform owner only)
+Sign in at `/#/super` (the "JAO super administrator" link on the first page). The owner menu has two entries:
+- **Platform**: approve/reject school registrations, create schools, activate/suspend/reactivate, reset a school administrator's password link (existing screen, unchanged).
+- **Subscriptions & finance**: Overview (schools active/suspended, total students, teachers, parents, revenue, outstanding), Subscriptions (Basic/Standard/Premium plans, prices you set, expiry dates, record payments, search/filter), Finance (12-month revenue, outstanding, expiring), Announcements (in-app notice to school administrators), School administrators (deactivate/reactivate, reset link), Activity & security (sign-in failures, sensitive actions, audit log), My settings (change your own password), and CSV exports (schools, subscriptions, payments, activity).
+- Payments are **records you enter** (cash, bank transfer, mobile money, cheque). JAO does not collect money online. Plan prices start at 0 until you set them. The currency is XAF.
+- The owner sees totals and school-level facts only, never students, grades, report cards or parents' details. School administrators get "403" on every `/platform/*` route.
+
+### Forgotten Super Administrator password
+Stop the app, then on the server run: `npm run reset-owner`. It finds your existing owner account (it never creates another), makes a backup copy of the database first, sets a strong random password that works immediately, prints the username and password **once** in the terminal, and ends all owner sessions. Sign in at `/#/super`, then change it in *Subscriptions & finance → My settings*. Sign-in stays password-only (no SMS, no 2FA). If you run more than one database file, set `JAO_DATA_DIR` or `JAO_DB_FILE` first.
+
+## Parent Access portal
+**How a parent gets an account** (administrator: menu *Parents*): *Register a parent* → name, phone with country code and/or email, then search and add each child with the relationship. The screen then shows the **school code, login phone/email and a temporary password once**; give them to the parent. If the same phone or email is registered again, the new children are added to the **same** account (one account for all children in that school). A parent must change the temporary password at first sign-in.
+
+**How a parent signs in**: first page → **PARENT ACCESS** → school code (for example JAO-0001) + phone or email + password. Parents never create or register a school. Forgot password: the parent enters the school code and phone/email; the school administrators get a notification and use *Parents → New password* (JAO has no SMS/email provider, so nothing is sent outside JAO and it never says so).
+
+**What the parent sees** (dashboard with a child switcher; only their own linked children): approved report cards and results history (marks, averages, rankings, teacher comments), attendance (absences, lateness), fees/payments/balances with downloadable PDF receipts, homework, announcements, official warning notices, convocations/meeting notices, and messages to the administration.
+
+**School side** (*School life*): attendance (administrators and class teachers mark absent/late/excused), homework (teachers for their classes), announcements and fees (administrator), warning notices (administrator or a user with the "manage discipline" permission). Incident details stay private; parents only see the notice the school chooses to send.
+
+**Automatic notifications** (bell, in-app): report card approved, child absent/late, new fee and fee reminders ("Send reminders to parents"), payment received, warning notice, important announcement, convocation scheduled (existing), reply from the school. **No SMS, WhatsApp or email is sent** unless a provider is connected in the future, and JAO never reports a message as delivered when it was not.
+
+## Upgrading an existing installation
+1. Stop the app and copy your `data/` folder somewhere safe (migrations also make an automatic backup in `data/backups/`).
+2. Replace the project files with the new ones (keep your `data/` folder).
+3. Start the app. Migrations 0012 (platform finance) and 0013 (parent portal) are applied automatically; they only add tables. No existing table or record is changed.
+4. If you forgot the owner password: `npm run reset-owner` (app stopped).
+Online use for real schools still requires hosting, HTTPS, off-site backups and a security review (section 7).
+
+## Scholarships — phase 3 (recipients, renewals, reports)
+When an application is **approved**, a recipient record (award) is created automatically. *Scholarships → Recipients*: the administrator sees every recipient, can open one to change dates, suspend/resume, end the scholarship (a reason is required) or record a **renewal review** (renewed with a new end date, or not renewed with a reason, which ends it). Families see only their own child's awards and are notified in-app. *Scholarships → Reports* (administrator): applications, approved, pending, active awards per scholarship, and CSV downloads of applications and recipients. Database migration 0014 only adds tables.
+Still to come: phase 4 (external Scholarship Finder with a shared catalogue) and phase 5 (DOUDOUS² answers about scholarships).
+
+## Scholarships — phase 4 (Scholarship Finder) and phase 5 (DOUDOUS² answers)
+**Finder** (*Scholarships → Finder*): a catalogue of **external** scholarships (other organisations) shared by all schools and kept by the platform owner in *Subscriptions & finance → Scholarship catalogue*. The owner adds entries (official https page required, "last verified" date required, a deadline only if the official page states it) or loads the **starter list** that ships with JAO (Chevening, Erasmus Mundus Joint Masters, Mastercard Foundation Scholars, France Excellence Eiffel, DAAD), each read on its official page on 15 Nov 2026. Each school administrator chooses which published entries their school shows (*Choose what my school shows*); students, parents and staff see only those and can save favourites. JAO only lists information and links to the official page; it never applies on anyone's behalf, and the details can change, so users must check the official page. Drafts and archived entries are never shown.
+**DOUDOUS²** answers scholarship questions (open scholarships, the school's approved external scholarships with their official links and stated dates, and a parent's/student's own application status) from real records only, per school and per asker, in English and French. Database migration 0015 only adds tables.
+
+## Merged: two Super Administrator password tools
+The project has both: (1) `npm run reset-owner` (the permanent-password tool: you type a new password, or `-- --generate` for a one-time temporary one) with recovery codes and the *Account & security* page, see `docs/SUPER_ADMIN.md`; and (2) `npm run reset-owner:generated`, which always prints a strong generated password once. Both change only the existing Super Administrator and never create another. Database migrations are numbered 0012 (owner security), 0013 (platform finance), 0014 (parent portal), 0015 (scholarship awards), 0016 (scholarship finder).
+Migration 0017 re-checks the tables added by 0012–0016 and creates any that an earlier build skipped (it only adds, never changes data). If the Account & security page shows "Server error" after an update, restart the app once so 0017 can run.
+
+## Staff office dashboards and discipline permissions
+
+The Staff area now includes per-staff discipline permission assignment. School administrators can grant or revoke `manage_discipline`, `council_member`, and `approve_decisions` for individual teacher accounts. These grants are school-scoped and recorded in the audit log. Existing teacher incident-reporting access and existing login roles remain unchanged.
+
+Staff accounts can open **My Office** (`#/office`) to see their assigned position, department and links to the relevant existing school modules. Office assignment is organizational metadata; it does not itself grant access to confidential records or change the account's login role.
+
+## Department access (staff)
+
+The Staff & Departments page has a **Department access** panel. It is **off by default**: nothing changes for any school until the administrator switches it on.
+
+When it is on, the **server** (not just the menu) limits each teacher-role staff member to the modules their department allows:
+
+| Department | Modules |
+|---|---|
+| School Administration | everything |
+| Discipline Office | student records, discipline, school life |
+| Academic Office | classes/grades/reports, student records, school life |
+| Student Affairs | student records, school life, discipline, scholarships |
+| Guidance and Counselling | student records, discipline, scholarships |
+| Examinations Office | classes/grades/reports, student records |
+| Admissions Office / Accounts Office | student records |
+| Scholarships Office | student records, scholarships |
+| School Activities | school life |
+
+- Positions "Class Teacher" and "Subject Teacher", and staff with no active department, keep the ordinary teacher tools (classes, student records, school life, discipline reporting).
+- The administrator can change any department's module list (button **Access**) or go back to the standard list. Changes are recorded in the audit log.
+- A department opens a module; it does **not** grant extra discipline powers. The per-person permissions on the same page still apply.
+- The school administrator, parents, students and the platform owner are never limited by this.
+- A blocked request answers `403 department_access_denied`. Migration `0019_department_access.js` adds two new tables and changes nothing existing.
+
+## Small improvements
+
+- **PNG logos on PDFs.** A school's PNG logo (with or without a transparent background) now appears on the convocation PDF and on payment receipts, like JPEG logos already did. Decoded with Node's built-in `zlib`; nothing to install. Interlaced PNGs are not embedded (the PDF is simply made without a logo).
+- **Term dates.** In Settings → academic years, every term has a **Dates** button (start and end). Terms of the same year cannot overlap; teachers and parents can read the dates. Stored in a new table (migration `0020_term_dates.js`); the `terms` table is unchanged.
+- **French.** The Staff & Departments and My Office pages are now fully translated, including department names and positions. The stored values stay in English so existing data and rules keep working.
+- **School logo in the system.** Once a school has uploaded its logo (Settings → School), it appears beside "JAO" at the top of the side menu and the mobile header for everyone in that school, and at the top of every report card (larger, and kept when printing). Schools without a logo keep the JAO mark.

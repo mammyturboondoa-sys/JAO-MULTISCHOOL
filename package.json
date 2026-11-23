@@ -3,12 +3,16 @@
   "version": "1.0.0",
   "description": "JAO School Management System for Seraphim International (multi-school ready)",
   "private": true,
-  "engines": { "node": ">=22.5" },
+  "engines": {
+    "node": ">=22.5"
+  },
   "scripts": {
     "start": "node --disable-warning=ExperimentalWarning server/index.js",
     "backup": "node --disable-warning=ExperimentalWarning scripts/backup.js",
     "restore": "node --disable-warning=ExperimentalWarning scripts/restore.js",
+    "reset-owner": "node --disable-warning=ExperimentalWarning scripts/reset-owner-password.js",
+    "reset-owner:generated": "node --disable-warning=ExperimentalWarning scripts/reset-owner-generated.js",
     "demo-data": "node --disable-warning=ExperimentalWarning scripts/demo-data.js",
-    "test": "node --disable-warning=ExperimentalWarning --test tests/api.test.js tests/calc.test.js tests/migrations.test.js tests/isolation.test.js tests/multi-email.test.js tests/discipline.test.js tests/discipline-incidents.test.js tests/discipline-council.test.js tests/discipline-convocations.test.js tests/discipline-report.test.js"
+    "test": "node --disable-warning=ExperimentalWarning --test tests/api.test.js tests/staff.test.js tests/department-access.test.js tests/pdf-png.test.js tests/term-dates.test.js tests/school-logo.test.js tests/calc.test.js tests/migrations.test.js tests/isolation.test.js tests/multi-email.test.js tests/discipline.test.js tests/discipline-incidents.test.js tests/discipline-council.test.js tests/discipline-convocations.test.js tests/discipline-report.test.js tests/prefects.test.js tests/scholarships.test.js tests/scholarship-applications.test.js tests/mathchat.test.js tests/import.test.js tests/owner-reset.test.js tests/platform.test.js tests/parents.test.js tests/scholarship-awards.test.js tests/scholarship-finder.test.js tests/scholarship-dudus.test.js tests/owner-password.test.js tests/owner-restart.test.js tests/migration-heal.test.js"
   }
 }
