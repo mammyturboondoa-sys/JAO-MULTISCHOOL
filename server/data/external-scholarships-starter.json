@@ -1,0 +1,38 @@
+{
+  "note": "Starter list. Each entry was read on its official page on the date in last_verified_on. Only dates the official page states are filled in; nothing is guessed. Always check the official page before applying.",
+  "entries": [
+    {
+      "title": "Chevening Scholarships", "provider": "UK Government (Foreign, Commonwealth & Development Office)", "country": "United Kingdom", "levels": "Master's",
+      "eligibility": "Citizen of a Chevening-eligible country or territory; commit to return home for at least two years after the award; at least two years (2,800 hours) of work experience after the undergraduate degree; an undergraduate degree that qualifies for a UK master's, finished at least two years before the deadline; apply to three eligible UK courses with an unconditional offer from at least one by the deadline. Not open to British citizens or people resident in the UK, among other exclusions listed on the page.",
+      "coverage": "Not stated on the eligibility page. See the official site.", "how_to_apply": "Apply online through the official Chevening application, following the published application timeline.",
+      "official_url": "https://www.chevening.org/resource-hub/guidance/eligibility/", "deadline": null, "deadline_note": "The eligibility page does not list dates; it refers to a separate application timeline on the official site.", "last_verified_on": "2026-11-15"
+    },
+    {
+      "title": "Erasmus Mundus Joint Masters", "provider": "European Union (Erasmus+)", "country": "Europe (several countries per programme)", "levels": "Master's",
+      "eligibility": "Open to students from anywhere in the world with a bachelor's degree (or in the last year of bachelor studies, graduating before the master's starts), or a recognised equivalent level of learning.",
+      "coverage": "Full scholarships may be offered to the best-ranked students worldwide: they cover participation costs and contribute to travel, visa and a living allowance. Programmes last 1 to 2 academic years (60, 90 or 120 ECTS).",
+      "how_to_apply": "Apply directly to the institution running your chosen programme. Search the course catalogue and follow the entry requirements on each master's website.",
+      "official_url": "https://erasmus-plus.ec.europa.eu/opportunities/individuals/students/erasmus-mundus-joint-masters", "deadline": null, "deadline_note": "No fixed date: the official page says applications are in most cases submitted between October and January for courses starting the following academic year. Each programme sets its own deadline.", "last_verified_on": "2026-11-15"
+    },
+    {
+      "title": "Mastercard Foundation Scholars Program", "provider": "Mastercard Foundation and partner universities", "country": "Partner universities in several countries", "levels": "Bachelor's, Master's",
+      "eligibility": "Academically strong young people committed to making a difference; primarily for young Africans. Age 29 or under for undergraduate study and 35 or under for graduate study. Women, refugees, forcibly displaced people, persons with disabilities and other underrepresented groups are encouraged to apply.",
+      "coverage": "The page does not list tuition or living-cost amounts. It describes comprehensive support including psychosocial services and leadership training, and says application fees are reimbursed if a candidate is selected.",
+      "how_to_apply": "Apply directly through the partner institution you want to attend and follow its instructions; take required tests (such as SAT, TOEFL or IELTS) well before the deadline and request recommendation letters early.",
+      "official_url": "https://mastercardfdn.org/en/articles/becoming-a-mastercard-foundation-scholar/", "deadline": null, "deadline_note": "Each partner institution sets its own deadline.", "last_verified_on": "2026-11-15"
+    },
+    {
+      "title": "France Excellence Eiffel Scholarship Program", "provider": "French Ministry for Europe and Foreign Affairs (run by Campus France)", "country": "France", "levels": "Master's, PhD",
+      "eligibility": "Foreign students up to 29 years old for master's level and up to 35 for PhD level. Only applications submitted by French higher education institutions are accepted, so the student applies through a French institution.",
+      "coverage": "Amounts and benefits are not stated on the page; the programme rules are in a linked PDF.", "how_to_apply": "Apply through a French higher education institution, which submits the application to Campus France.",
+      "official_url": "https://www.campusfrance.org/en/france-excellence-eiffel-scholarship-program", "deadline": "2027-01-06", "deadline_note": "2027 session: call opens October 2026; Campus France must receive applications by 6 January 2027 (inclusive); results from 12 April 2027. The institution submits, so ask it for its own earlier internal date.", "last_verified_on": "2026-11-15"
+    },
+    {
+      "title": "DAAD scholarships (Germany)", "provider": "DAAD (German Academic Exchange Service)", "country": "Germany", "levels": "Master's, PhD, postdoc, research visits",
+      "eligibility": "Mainly graduates, doctoral students and postdocs. Research grants are open to PhD students from almost all countries; full doctoral grants are mainly for applicants from developing and emerging countries; some master's programmes in STEM and development-related fields target developing and emerging countries. Each programme has its own call.",
+      "coverage": "Not repaid. Usually a monthly payment (the page cites EUR 992 for students and EUR 1,300 for doctoral students) and a flat-rate travel allowance; often health, accident and liability insurance; some programmes add a research allowance, family benefits or language-course funds.",
+      "how_to_apply": "Read the call for your chosen programme in the DAAD scholarship database, check its deadline, and use the application portal it links to.",
+      "official_url": "https://www.daad.de/en/studying-in-germany/scholarships/daad-scholarships/", "deadline": null, "deadline_note": "Deadlines differ by programme; see each call in the DAAD scholarship database.", "last_verified_on": "2026-11-15"
+    }
+  ]
+}
